@@ -1,0 +1,32 @@
+# Angular build output
+/dist/
+/out-tsc/
+/tmp/
+.angular/
+
+# Node
+/node_modules/
+/npm-debug.log
+yarn-error.log
+package-lock.json
+pnpm-lock.yaml
+
+# Compiled JavaScript (ako ručno kompajliraš TS)
+/**/*.js
+/**/**/*.js
+/**/**/*.js.map
+
+# Environment files (ako želiš da ne upload-aš osjetljive podatke)
+src/environments/*.prod.ts
+
+# IDE: WebStorm / JetBrains
+.idea/
+/*.iml
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
