@@ -10,7 +10,6 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected readonly title = signal('plantSystem');
   protected readonly temperature = signal(20.5);
   protected readonly isLEDon = signal(false);
   private platformId = inject(PLATFORM_ID);

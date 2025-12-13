@@ -6,7 +6,7 @@
       <span class="font-bold text-xl">{{temperature()}}</span>
       <span>℃</span>
     </div>
-    <button class="btn bg-amber-700 text-black font-bold" (click)="toggleLED()" [ngClass]="{'led-on': isLEDon(), 'led-off': !isLEDon()}">
+    <button class="btn bg-amber-700 text-black font-bold" (click)="toggleLED()">
       {{isLEDon() ? 'Iskljuci LED' : 'Ukljuci LED'}}
     </button>
   </div>
