@@ -12,6 +12,7 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
 export class App implements OnInit {
   protected readonly temperature = signal(20.5);
   protected readonly isLEDon = signal(false);
+  protected readonly soilMoisture = signal(0);
   private platformId = inject(PLATFORM_ID);
   private database: any;
 
@@ -34,6 +35,12 @@ export class App implements OnInit {
       onValue(ledRef, (snapshot) => {
         const data = snapshot.val();
         this.isLEDon.set(data);
+      });
+
+      const moistureRef = ref(this.database, 'soilMoisture');
+      onValue(moistureRef, (snapshot) => {
+        const data = snapshot.val();
+        this.soilMoisture.set(data);
       });
     }
   }
