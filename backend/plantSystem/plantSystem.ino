@@ -16,18 +16,21 @@ const char* password = WLAN_PASSWORD;
 const char* temperatureURL = TEMPERATURE_URL;
 const char* ledURL = LED_URL;
 const char* soilMoistureURL = SOIL_MOISTURE_URL;
+const char* coURL = CO_URL;
+const char* nh3URL = NH3_URL;
+const char* ch4URL = CH4_URL;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-void sendDataToFirebase(const char* url, float value){
-  if(WiFi.status() == WL_CONNECTED){
+void sendDataToFirebase(const char* url, float value) {
+  if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(url);
     http.addHeader("Content-Type", "application/json");
     String json = String(value);
     int httpResponseCode = http.PUT(json);
-    if(httpResponseCode > 0){
+    if (httpResponseCode > 0) {
       Serial.print("\nFirebase response code: ");
       Serial.println(httpResponseCode);
     } else {
@@ -38,12 +41,12 @@ void sendDataToFirebase(const char* url, float value){
   }
 }
 
-bool readLEDStatusFromFirebase(){
-  if(WiFi.status() == WL_CONNECTED){
+bool readLEDStatusFromFirebase() {
+  if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(ledURL);
     int httpResponseCode = http.GET();
-    if(httpResponseCode == 200){
+    if (httpResponseCode == 200) {
       String payload = http.getString();
       http.end();
       payload.trim();
@@ -61,18 +64,18 @@ bool readLEDStatusFromFirebase(){
   return false;
 }
 
-float analogToPPM(float voltage, const char* gasType){
-  if(strcmp(gasType, "CO") == 0){
+float analogToPPM(float voltage, const char* gasType) {
+  if (strcmp(gasType, "CO") == 0) {
     return voltage * 100.0;  // aproksimacija
-  } else if(strcmp(gasType, "NH3") == 0){
-    return voltage * 50.0;   // aproksimacija
-  } else if(strcmp(gasType, "CH4") == 0){
-    return voltage * 80.0;   // aproksimacija
+  } else if (strcmp(gasType, "NH3") == 0) {
+    return voltage * 50.0;  // aproksimacija
+  } else if (strcmp(gasType, "CH4") == 0) {
+    return voltage * 80.0;  // aproksimacija
   }
   return 0;
 }
 
-void setup(void){
+void setup(void) {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
   pinMode(DIGITAL_PIN, INPUT);
@@ -83,9 +86,9 @@ void setup(void){
 
   delay(1000);
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid,password);
+  WiFi.begin(ssid, password);
   Serial.println("\nConnecting");
-  while(WiFi.status() != WL_CONNECTED){
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(100);
   }
@@ -97,15 +100,15 @@ void setup(void){
   sensors.begin();
 }
 
-void loop(void){
+void loop(void) {
   // ---------- TEMPERATURA ----------
   Serial.print("\nDohvacanje temperature...");
-  sensors.requestTemperatures(); 
+  sensors.requestTemperatures();
   Serial.println("Zavrseno");
   delay(1500);
 
   float tempC = sensors.getTempCByIndex(0);
-  if(tempC != DEVICE_DISCONNECTED_C){
+  if (tempC != DEVICE_DISCONNECTED_C) {
     Serial.print("Temperatura: ");
     Serial.print(tempC);
     Serial.println(" C");
@@ -142,18 +145,27 @@ void loop(void){
     float nh3PPM = analogToPPM(airVoltage, "NH3");
     float ch4PPM = analogToPPM(airVoltage, "CH4");
 
-    Serial.print("CO: "); Serial.print(coPPM); Serial.println(" ppm");
-    Serial.print("NH3: "); Serial.print(nh3PPM); Serial.println(" ppm");
-    Serial.print("CH4: "); Serial.print(ch4PPM); Serial.println(" ppm");
+    Serial.print("CO: ");
+    Serial.print(coPPM);
+    Serial.println(" ppm");
+    Serial.print("NH3: ");
+    Serial.print(nh3PPM);
+    Serial.println(" ppm");
+    Serial.print("CH4: ");
+    Serial.print(ch4PPM);
+    Serial.println(" ppm");
     Serial.println("-------------------------");
+
+    sendDataToFirebase(coURL, coPPM);
+    sendDataToFirebase(nh3URL, nh3PPM);
+    sendDataToFirebase(ch4URL, ch4PPM);
 
     delay(500);
 
     // ---------- LED ----------
     bool ledStatus = readLEDStatusFromFirebase();
     digitalWrite(LED_PIN, ledStatus ? HIGH : LOW);
-  }
-  else{
+  } else {
     Serial.println("Error: Greska prilikom ucitavanja senzora temperature");
   }
 
