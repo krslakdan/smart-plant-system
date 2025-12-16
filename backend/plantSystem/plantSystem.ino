@@ -8,6 +8,7 @@
 #define LED_PIN 32
 #define ANALOG_PIN 35
 #define DIGITAL_PIN 13
+#define AIR_QUALITY_PIN 34
 #define READ_INTERVAL_MS 1000
 
 const char* ssid = WLAN_SSID;
@@ -60,10 +61,25 @@ bool readLEDStatusFromFirebase(){
   return false;
 }
 
+float analogToPPM(float voltage, const char* gasType){
+  if(strcmp(gasType, "CO") == 0){
+    return voltage * 100.0;  // aproksimacija
+  } else if(strcmp(gasType, "NH3") == 0){
+    return voltage * 50.0;   // aproksimacija
+  } else if(strcmp(gasType, "CH4") == 0){
+    return voltage * 80.0;   // aproksimacija
+  }
+  return 0;
+}
+
 void setup(void){
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
   pinMode(DIGITAL_PIN, INPUT);
+  pinMode(AIR_QUALITY_PIN, INPUT);
+
+  analogReadResolution(12);
+  analogSetAttenuation(ADC_11db);
 
   delay(1000);
   WiFi.mode(WIFI_STA);
@@ -82,6 +98,7 @@ void setup(void){
 }
 
 void loop(void){
+  // ---------- TEMPERATURA ----------
   Serial.print("\nDohvacanje temperature...");
   sensors.requestTemperatures(); 
   Serial.println("Zavrseno");
@@ -111,6 +128,27 @@ void loop(void){
 
     delay(1000);
 
+    // ---------- KVALITETA ZRAKA ----------
+    int airRaw = analogRead(AIR_QUALITY_PIN);
+    float airVoltage = (airRaw / 4095.0) * 5.0;
+
+    Serial.print("Air Quality AO Raw: ");
+    Serial.print(airRaw);
+    Serial.print(" | Voltage: ");
+    Serial.print(airVoltage);
+    Serial.println(" V");
+
+    float coPPM = analogToPPM(airVoltage, "CO");
+    float nh3PPM = analogToPPM(airVoltage, "NH3");
+    float ch4PPM = analogToPPM(airVoltage, "CH4");
+
+    Serial.print("CO: "); Serial.print(coPPM); Serial.println(" ppm");
+    Serial.print("NH3: "); Serial.print(nh3PPM); Serial.println(" ppm");
+    Serial.print("CH4: "); Serial.print(ch4PPM); Serial.println(" ppm");
+    Serial.println("-------------------------");
+
+    delay(500);
+
     // ---------- LED ----------
     bool ledStatus = readLEDStatusFromFirebase();
     digitalWrite(LED_PIN, ledStatus ? HIGH : LOW);
@@ -118,4 +156,6 @@ void loop(void){
   else{
     Serial.println("Error: Greska prilikom ucitavanja senzora temperature");
   }
+
+  delay(READ_INTERVAL_MS);
 }
