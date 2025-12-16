@@ -68,6 +68,51 @@
         </p>
       </div>
     </div>
+
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8 flex flex-col items-center">
+        <div class="flex items-center mb-4">
+          <svg class="w-7 h-7 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          </svg>
+          <h2 class="card-title text-2xl font-semibold text-yellow-400">CO</h2>
+        </div>
+        <div class="flex items-baseline mb-6">
+          <span class="text-4xl font-bold mr-2">{{ co() }}</span>
+          <span class="text-xl font-semibold">ppm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8 flex flex-col items-center">
+        <div class="flex items-center mb-4">
+          <svg class="w-7 h-7 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          </svg>
+          <h2 class="card-title text-2xl font-semibold text-green-400">NH3</h2>
+        </div>
+        <div class="flex items-baseline mb-6">
+          <span class="text-4xl font-bold mr-2">{{ nh3() }}</span>
+          <span class="text-xl font-semibold">ppm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+      <div class="card-body p-8 flex flex-col items-center">
+        <div class="flex items-center mb-4">
+          <svg class="w-7 h-7 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          </svg>
+          <h2 class="card-title text-2xl font-semibold text-purple-400">CH4</h2>
+        </div>
+        <div class="flex items-baseline mb-6">
+          <span class="text-4xl font-bold mr-2">{{ ch4() }}</span>
+          <span class="text-xl font-semibold">ppm</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
