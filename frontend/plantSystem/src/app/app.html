@@ -3,7 +3,21 @@
   <p class="text-gray-400 text-center max-w-2xl mb-10">
     Pratite temperaturu i vlažnost tla u realnom vremenu. Kontrolirajte LED signalizaciju ili druge uređaje po potrebi.
   </p>
+  <div
+    *ngIf="co() > 70 || nh3() > 25 || ch4() > 5000; else okState"
+    class="mb-8 px-5 py-3 rounded-2xl
+         bg-red-500/20 text-red-400
+         font-semibold text-sm text-center animate-pulse">
+    ⚠️ UPOZORENJE: Detektovan opasan nivo gasa
+  </div>
 
+  <ng-template #okState>
+    <div class="mb-8 px-5 py-3 rounded-2xl
+              bg-emerald-500/20 text-emerald-400
+              font-semibold text-sm text-center">
+      Sistem radi normalno ✅
+    </div>
+  </ng-template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
     <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
@@ -42,6 +56,16 @@
 
           <span>{{ isLEDon() ? 'LED uključena' : 'LED isključena' }}</span>
         </button>
+        <span
+          class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="temperature() < 15
+    ? 'bg-blue-500/20 text-blue-400'
+    : temperature() <= 30
+    ? 'bg-emerald-500/20 text-emerald-400'
+    : 'bg-red-500/20 text-red-400'">
+  {{ temperature() < 15 ? 'Preniska' : temperature() <= 30 ? 'Optimalna' : 'Previsoka' }}
+</span>
+
       </div>
     </div>
 
@@ -66,14 +90,27 @@
         <p class="text-gray-300 font-semibold text-center">
           Idealna vlažnost: 40–60%
         </p>
+        <span
+          class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="soilMoisture() < 40
+    ? 'bg-yellow-500/20 text-yellow-400'
+    : soilMoisture() <= 60
+    ? 'bg-emerald-500/20 text-emerald-400'
+    : 'bg-blue-500/20 text-blue-400'">
+  {{ soilMoisture() < 40 ? 'Suho' : soilMoisture() <= 60 ? 'Idealno' : 'Previše vlažno' }}
+</span>
+
       </div>
     </div>
+
 
     <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
-          <svg class="w-7 h-7 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          <svg class="w-8 h-8 text-red-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 14a4 4 0 0 1 4-4h1a5 5 0 0 1 9 2 3 3 0 0 1-1 6H7a3 3 0 0 1-1-4z"/>
+            <path d="M12 11v4" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="17" r="1"/>
           </svg>
           <h2 class="card-title text-2xl font-semibold text-yellow-400">CO</h2>
         </div>
@@ -81,14 +118,25 @@
           <span class="text-4xl font-bold mr-2">{{ co() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <span
+          class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="co() < 30
+    ? 'bg-emerald-500/20 text-emerald-400'
+    : co() < 70
+    ? 'bg-yellow-500/20 text-yellow-400'
+    : 'bg-red-500/20 text-red-400'">
+  {{ co() < 30 ? 'Sigurno' : co() < 70 ? 'Upozorenje' : 'Opasno' }}
+</span>
+
       </div>
     </div>
 
     <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
-          <svg class="w-7 h-7 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          <svg class="w-8 h-8 text-yellow-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 3h6v2l-1 1v4l4 7a2 2 0 0 1-2 3H8a2 2 0 0 1-2-3l4-7V6l-1-1z"/>
+            <path d="M9 14h6" stroke="currentColor" stroke-width="2"/>
           </svg>
           <h2 class="card-title text-2xl font-semibold text-green-400">NH3</h2>
         </div>
@@ -96,14 +144,24 @@
           <span class="text-4xl font-bold mr-2">{{ nh3() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <span
+          class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="nh3() < 10
+    ? 'bg-emerald-500/20 text-emerald-400'
+    : nh3() < 25
+    ? 'bg-yellow-500/20 text-yellow-400'
+    : 'bg-red-500/20 text-red-400'">
+  {{ nh3() < 10 ? 'Normalno' : nh3() < 25 ? 'Povišeno' : 'Opasno' }}
+</span>
       </div>
     </div>
 
     <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
-          <svg class="w-7 h-7 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 2a2 2 0 0 1 2 2v7a2 2 0 1 1-4 0V4a2 2 0 0 1 2-2z"/>
+          <svg class="w-8 h-8 text-green-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-4 4-8 4-8z"/>
+            <path d="M12 14a2 2 0 0 0 2-2" stroke="currentColor" stroke-width="2"/>
           </svg>
           <h2 class="card-title text-2xl font-semibold text-purple-400">CH4</h2>
         </div>
@@ -111,10 +169,18 @@
           <span class="text-4xl font-bold mr-2">{{ ch4() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <span
+          class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="ch4() < 1000
+    ? 'bg-emerald-500/20 text-emerald-400'
+    : ch4() < 5000
+    ? 'bg-yellow-500/20 text-yellow-400'
+    : 'bg-red-500/20 text-red-400'">
+  {{ ch4() < 1000 ? 'Sigurno' : ch4() < 5000 ? 'Upozorenje' : 'Opasno' }}
+</span>
       </div>
     </div>
   </div>
-
   <!-- Footer -->
   <footer class="mt-10 text-gray-500 text-center text-sm">
     Podaci se ažuriraju u realnom vremenu

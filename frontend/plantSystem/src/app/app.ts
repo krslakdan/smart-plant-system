@@ -1,11 +1,11 @@
 import { Component, signal, OnInit, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser, NgClass } from '@angular/common';
+import {isPlatformBrowser, NgClass, NgIf} from '@angular/common';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 
 @Component({
   selector: 'app-root',
-  imports: [NgClass],
+  imports: [NgClass, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
