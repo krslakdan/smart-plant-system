@@ -19,7 +19,8 @@
     </div>
   </ng-template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
-    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:-translate-y-1 hover:shadow-2xl
+ transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
           <svg class="w-7 h-7 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -32,12 +33,20 @@
           <span class="text-xl font-semibold">℃</span>
         </div>
 
-        <div class="w-full bg-gray-700 rounded-full h-3 mb-6">
-          <div class="bg-red-500 h-3 rounded-full transition-all duration-500"
-               [style.width.%]="temperature() * 2"></div>
+        <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+          <div
+            class="h-3 rounded-full transition-all duration-500 min-w-[2px]"
+            [style.width.%]="Math.min((temperature() ?? 0) / 30 * 100, 100)"
+            [ngClass]="temperature() < 15
+      ? 'bg-blue-500'
+      : temperature() <= 30
+      ? 'bg-emerald-500'
+      : 'bg-red-500'">
+          </div>
         </div>
 
-        <button
+
+        <!--<button
           (click)="toggleLED()"
           class="flex items-center gap-2 px-6 py-2 rounded-lg font-semibold
          border transition-all duration-200 shadow-sm
@@ -55,7 +64,13 @@
           </svg>
 
           <span>{{ isLEDon() ? 'LED uključena' : 'LED isključena' }}</span>
-        </button>
+        </button>-->
+
+        <p class="text-xs text-gray-500 text-center">
+          Popunjenost u odnosu na sigurni prag
+        </p>
+
+
         <span
           class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
           [ngClass]="temperature() < 15
@@ -65,11 +80,14 @@
     : 'bg-red-500/20 text-red-400'">
   {{ temperature() < 15 ? 'Preniska' : temperature() <= 30 ? 'Optimalna' : 'Previsoka' }}
 </span>
-
+        <p class="mt-3 text-sm text-gray-300 text-center">
+          Optimalna temperatura: 15–30 °C
+        </p>
       </div>
     </div>
 
-    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:-translate-y-1 hover:shadow-2xl
+ transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
           <svg class="w-7 h-7 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -82,14 +100,24 @@
           <span class="text-xl font-semibold">%</span>
         </div>
 
-        <div class="w-full bg-gray-700 rounded-full h-3 mb-6">
-          <div class="bg-blue-500 h-3 rounded-full transition-all duration-500"
-               [style.width.%]="soilMoisture()"></div>
+        <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+          <div
+            class="h-3 rounded-full transition-all duration-500 min-w-[2px]"
+            [style.width.%]="Math.min((soilMoisture() ?? 0) / 60 * 100, 100)"
+            [ngClass]="soilMoisture() < 40
+      ? 'bg-yellow-500'
+      : soilMoisture() <= 60
+      ? 'bg-emerald-500'
+      : 'bg-blue-500'">
+          </div>
         </div>
 
-        <p class="text-gray-300 font-semibold text-center">
-          Idealna vlažnost: 40–60%
+
+        <p class="text-xs text-gray-500 text-center">
+          Popunjenost u odnosu na sigurni prag
         </p>
+
+
         <span
           class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
           [ngClass]="soilMoisture() < 40
@@ -99,12 +127,15 @@
     : 'bg-blue-500/20 text-blue-400'">
   {{ soilMoisture() < 40 ? 'Suho' : soilMoisture() <= 60 ? 'Idealno' : 'Previše vlažno' }}
 </span>
-
+        <p class="mt-3 text-sm text-gray-300 text-center">
+          Idealna vlažnost: 40-60%
+        </p>
       </div>
     </div>
 
 
-    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:-translate-y-1 hover:shadow-2xl
+ transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
           <svg class="w-8 h-8 text-red-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -118,6 +149,23 @@
           <span class="text-4xl font-bold mr-2">{{ co() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+          <div
+            class="h-3 rounded-full transition-all duration-500"
+            [style.width.%]="Math.min(co() / 30 * 100, 100)"
+            [ngClass]="co() < 30
+      ? 'bg-emerald-500'
+      : co() < 70
+      ? 'bg-yellow-500'
+      : 'bg-red-500'">
+          </div>
+        </div>
+
+        <p class="text-xs text-gray-500 text-center">
+          Popunjenost u odnosu na sigurni prag
+        </p>
+
+
         <span
           class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
           [ngClass]="co() < 30
@@ -127,11 +175,14 @@
     : 'bg-red-500/20 text-red-400'">
   {{ co() < 30 ? 'Sigurno' : co() < 70 ? 'Upozorenje' : 'Opasno' }}
 </span>
-
+        <p class="mt-3 text-sm text-gray-300 text-center">
+          Siguran nivo CO: &lt; 30 ppm
+        </p>
       </div>
     </div>
 
-    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:-translate-y-1 hover:shadow-2xl
+ transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
           <svg class="w-8 h-8 text-yellow-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -144,6 +195,22 @@
           <span class="text-4xl font-bold mr-2">{{ nh3() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+          <div
+            class="h-3 rounded-full transition-all duration-500"
+            [style.width.%]="Math.min(nh3() / 25 * 100, 100)"
+            [ngClass]="nh3() < 10
+      ? 'bg-emerald-500'
+      : nh3() < 25
+      ? 'bg-yellow-500'
+      : 'bg-red-500'">
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 text-center">
+          Popunjenost u odnosu na sigurni prag
+        </p>
+
+
         <span
           class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
           [ngClass]="nh3() < 10
@@ -153,10 +220,14 @@
     : 'bg-red-500/20 text-red-400'">
   {{ nh3() < 10 ? 'Normalno' : nh3() < 25 ? 'Povišeno' : 'Opasno' }}
 </span>
+        <p class="mt-3 text-sm text-gray-300 text-center">
+          Normalan nivo NH₃: &lt; 10 ppm
+        </p>
       </div>
     </div>
 
-    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:scale-105 transition-transform duration-300">
+    <div class="card bg-gray-800 shadow-xl rounded-2xl transform hover:-translate-y-1 hover:shadow-2xl
+ transition-transform duration-300">
       <div class="card-body p-8 flex flex-col items-center">
         <div class="flex items-center mb-4">
           <svg class="w-8 h-8 text-green-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -169,6 +240,20 @@
           <span class="text-4xl font-bold mr-2">{{ ch4() }}</span>
           <span class="text-xl font-semibold">ppm</span>
         </div>
+        <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+          <div
+            class="h-3 rounded-full transition-all duration-500"
+            [style.width.%]="Math.min(ch4() / 1000 * 100, 100)"
+            [ngClass]="ch4() < 1000
+      ? 'bg-emerald-500'
+      : ch4() < 5000
+      ? 'bg-yellow-500'
+      : 'bg-red-500'">
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 text-center">
+          Popunjenost u odnosu na sigurni prag
+        </p>
         <span
           class="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
           [ngClass]="ch4() < 1000
@@ -178,6 +263,9 @@
     : 'bg-red-500/20 text-red-400'">
   {{ ch4() < 1000 ? 'Sigurno' : ch4() < 5000 ? 'Upozorenje' : 'Opasno' }}
 </span>
+        <p class="mt-3 text-sm text-gray-300 text-center">
+          Siguran nivo CH₄: &lt; 1000 ppm
+        </p>
       </div>
     </div>
   </div>

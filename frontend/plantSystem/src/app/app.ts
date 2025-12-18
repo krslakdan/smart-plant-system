@@ -66,4 +66,6 @@ export class App implements OnInit {
     set(ledRef, newValue).then(()=>console.log('LED state updated successfully to ', newValue))
       .catch((error:any) => {console.log('Error updating LED state: ',error)});
   }
+
+  protected readonly Math = Math;
 }
