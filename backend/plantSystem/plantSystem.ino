@@ -5,10 +5,12 @@
 #include <secrets.h>
 
 #define ONE_WIRE_BUS 33
-#define LED_PIN 32
+#define LED_PIN 25
 #define ANALOG_PIN 35
 #define DIGITAL_PIN 13
 #define AIR_QUALITY_PIN 34
+#define LIGHT_DIGITAL_PIN 27
+#define LIGHT_ANALOG_PIN 32
 #define READ_INTERVAL_MS 1000
 
 const char* ssid = WLAN_SSID;
@@ -19,6 +21,8 @@ const char* soilMoistureURL = SOIL_MOISTURE_URL;
 const char* coURL = CO_URL;
 const char* nh3URL = NH3_URL;
 const char* ch4URL = CH4_URL;
+const char* lightPercentURL=LIGHT_PERCENT_URL;
+const char* lightStatusURL=LIGHT_STATUS_URL;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -80,7 +84,7 @@ void setup(void) {
   pinMode(LED_PIN, OUTPUT);
   pinMode(DIGITAL_PIN, INPUT);
   pinMode(AIR_QUALITY_PIN, INPUT);
-
+  pinMode(LIGHT_DIGITAL_PIN, INPUT);
   analogReadResolution(12);
   analogSetAttenuation(ADC_11db);
 
@@ -133,7 +137,7 @@ void loop(void) {
 
     // ---------- KVALITETA ZRAKA ----------
     int airRaw = analogRead(AIR_QUALITY_PIN);
-    float airVoltage = (airRaw / 4095.0) * 5.0;
+    float airVoltage = (airRaw / 4095.0) * 3.3;
 
     Serial.print("Air Quality AO Raw: ");
     Serial.print(airRaw);
@@ -161,6 +165,28 @@ void loop(void) {
     sendDataToFirebase(ch4URL, ch4PPM);
 
     delay(500);
+
+    // ---------- SVJETLOST ----------
+    int lightDigital = digitalRead(LIGHT_DIGITAL_PIN);
+    bool isDay = (lightDigital == LOW);
+    sendDataToFirebase(lightStatusURL, isDay ? 1.0 : 0.0);
+
+    Serial.print("Svjetlost digitalno: ");
+    if (isDay) {
+      Serial.println("DAN (dovoljno svjetla)");
+    } else {
+      Serial.println("NOĆ / SLABO SVJETLO)");
+    }
+
+    int lightAnalog = analogRead(LIGHT_ANALOG_PIN);
+    float lightPercent = 100.0 - ((lightAnalog / 4095.0) * 100.0);
+
+    Serial.print("Svjetlost analogno: ");
+    Serial.print(lightPercent);
+    Serial.println("%");
+
+    sendDataToFirebase(lightPercentURL, lightPercent);
+
 
     // ---------- LED ----------
     bool ledStatus = readLEDStatusFromFirebase();
