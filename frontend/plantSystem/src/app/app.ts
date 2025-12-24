@@ -16,6 +16,7 @@ export class App implements OnInit {
   protected readonly co = signal(0);
   protected readonly nh3 = signal(0);
   protected readonly ch4 = signal(0);
+  protected readonly light = signal(0);
 
   protected readonly lastDataTimestamp = signal<number>(Date.now());
   protected readonly sensorOnline = signal<boolean>(false);
@@ -85,6 +86,13 @@ export class App implements OnInit {
       onValue(ch4Ref, snapshot => {
         const data = snapshot.val();
         this.ch4.set(data);
+        this.dataReceived();
+      });
+
+      const lightRef = ref(this.database, 'lightPercent');
+      onValue(lightRef, snapshot => {
+        const data = snapshot.val();
+        this.light.set(data);
         this.dataReceived();
       });
     }
