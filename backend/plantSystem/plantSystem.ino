@@ -83,7 +83,6 @@ bool readPumpStatusFromFirebase() {
   return false;
 }
 
-
 bool readLEDStatusFromFirebase() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
@@ -261,6 +260,29 @@ void loop(void) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // #define PUMP_PIN 17
 
 // void setup() {
@@ -274,5 +296,21 @@ void loop(void) {
 //   delay(3000);
 //   digitalWrite(PUMP_PIN, HIGH);
 //   delay(3000);
+// }
+
+// void blinkLed3x() {
+//   for (int i = 0; i < 3; i++) {
+//     digitalWrite(LED_PIN, HIGH);
+//     delay(300);
+//     digitalWrite(LED_PIN, LOW);
+//     delay(300);
+//     sendDataToFirebase(ledURL, false);
+//   }
+// }
+
+// void loop(){
+//   if(readLEDStatusFromFirebase()){
+//     blinkLed3x();
+//   }
 // }
 
