@@ -18,13 +18,13 @@ bool pumpState = false;
 unsigned long lastPumpCheck = 0;
 const unsigned long PUMP_CHECK_INTERVAL = 2000;
 
-// Millis-based timing variables
+
 unsigned long lastSensorRead = 0;
 unsigned long lastTempRequest = 0;
 bool tempRequested = false;
-const unsigned long SENSOR_READ_INTERVAL = 5000;      // 5 sekundi između čitanja senzora
-const unsigned long TEMP_CONVERSION_TIME = 750;       // DS18B20 treba ~750ms za konverziju
-const unsigned long LED_CHECK_INTERVAL = 500;         // Provjera LED svakih 500ms
+const unsigned long SENSOR_READ_INTERVAL = 5000;
+const unsigned long TEMP_CONVERSION_TIME = 750;
+const unsigned long LED_CHECK_INTERVAL = 500; 
 unsigned long lastLedCheck = 0;
 
 
@@ -109,11 +109,11 @@ bool readLEDStatusFromFirebase() {
 
 float analogToPPM(float voltage, const char* gasType) {
   if (strcmp(gasType, "CO") == 0) {
-    return voltage * 100.0;  // aproksimacija
+    return voltage * 10.0; 
   } else if (strcmp(gasType, "NH3") == 0) {
-    return voltage * 50.0;  // aproksimacija
+    return voltage * 5.0;
   } else if (strcmp(gasType, "CH4") == 0) {
-    return voltage * 80.0;  // aproksimacija
+    return voltage * 20.0;
   }
   return 0;
 }
@@ -148,14 +148,14 @@ void setup(void) {
 void loop(void) {
   unsigned long currentMillis = millis();
 
-  // ---------- LED CHECK (brza provjera svakih 500ms) ----------
+  // ---------- LED CHECK ----------
   if (currentMillis - lastLedCheck >= LED_CHECK_INTERVAL) {
     lastLedCheck = currentMillis;
     bool ledStatus = readLEDStatusFromFirebase();
     digitalWrite(LED_PIN, ledStatus ? HIGH : LOW);
   }
 
-  // ---------- PUMP CHECK (svakih 2 sekunde) ----------
+  // ---------- PUMP CHECK ----------
   if (currentMillis - lastPumpCheck >= PUMP_CHECK_INTERVAL) {
     lastPumpCheck = currentMillis;
     bool firebasePumpState = readPumpStatusFromFirebase();
@@ -167,7 +167,7 @@ void loop(void) {
     }
   }
 
-  // ---------- TEMPERATURA - zatraži konverziju ----------
+  // ---------- TEMPERATURA ----------
   if (!tempRequested && (currentMillis - lastSensorRead >= SENSOR_READ_INTERVAL)) {
     Serial.print("\nDohvacanje temperature...");
     sensors.setWaitForConversion(false);
@@ -176,7 +176,7 @@ void loop(void) {
     lastTempRequest = currentMillis;
   }
 
-  // ---------- ČITANJE SENZORA (nakon što temperatura bude spremna) ----------
+  // ---------- ČITANJE SENZORA ----------
   if (tempRequested && (currentMillis - lastTempRequest >= TEMP_CONVERSION_TIME)) {
     tempRequested = false;
     lastSensorRead = currentMillis;
