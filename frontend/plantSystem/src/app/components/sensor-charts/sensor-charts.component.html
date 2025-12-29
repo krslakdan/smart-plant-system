@@ -1,0 +1,51 @@
+<div class="w-full max-w-7xl mt-12">
+  <h2 class="text-2xl font-bold text-gray-100 mb-6 text-center">📊 Historija senzora</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Temperatura Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #temperatureChart></canvas>
+      </div>
+    </div>
+
+    <!-- Vlažnost tla Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #soilMoistureChart></canvas>
+      </div>
+    </div>
+
+    <!-- CO Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #coChart></canvas>
+      </div>
+    </div>
+
+    <!-- NH3 Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #nh3Chart></canvas>
+      </div>
+    </div>
+
+    <!-- CH4 Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #ch4Chart></canvas>
+      </div>
+    </div>
+
+    <!-- Svjetlost Chart -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-xl">
+      <div class="h-48">
+        <canvas #lightChart></canvas>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-gray-500 text-sm mt-4">
+    Prikazuje zadnjih 30 očitanja svakog senzora
+  </p>
+</div>
