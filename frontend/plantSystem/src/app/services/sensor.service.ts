@@ -109,10 +109,15 @@ export class SensorService {
     if (!this.database) return;
     const newValue = !this.pumpOn();
     this.pumpOn.set(newValue);
+    this.isLEDon.set(newValue);
 
     const pumpRef = ref(this.database, 'pump');
     set(pumpRef, newValue)
       .then(() => console.log('Pump state updated to', newValue))
       .catch((error) => console.error('Error updating pump state:', error));
+    const ledRef=ref(this.database, 'isLEDon');
+    set(ledRef,newValue)
+      .then(() => console.log('LED state updated to', newValue))
+      .catch((error) => console.error('Error updating LED state:', error));
   }
 }
