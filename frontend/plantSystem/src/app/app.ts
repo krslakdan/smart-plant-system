@@ -12,12 +12,13 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
 export class App implements OnInit {
   protected readonly temperature = signal(20.5);
   protected readonly isLEDon = signal(false);
+  protected readonly pumpOn = signal(false);
   protected readonly soilMoisture = signal(0);
   protected readonly co = signal(0);
   protected readonly nh3 = signal(0);
   protected readonly ch4 = signal(0);
   protected readonly light = signal(0);
-
+  protected readonly Math = Math;
   protected readonly lastDataTimestamp = signal<number>(Date.now());
   protected readonly sensorOnline = signal<boolean>(false);
   private offlineTimer: any;
@@ -95,6 +96,14 @@ export class App implements OnInit {
         this.light.set(data);
         this.dataReceived();
       });
+
+      const pumpRef = ref(this.database, 'pump');
+      onValue(pumpRef, (snapshot) => {
+        const data = snapshot.val();
+        this.pumpOn.set(!!data);
+        this.dataReceived();
+      });
+
     }
   }
 
@@ -108,5 +117,15 @@ export class App implements OnInit {
       .catch((error:any) => {console.log('Error updating LED state: ',error)});
   }
 
-  protected readonly Math = Math;
+  togglePump() {
+    if (!this.database) return;
+
+    const newValue = !this.pumpOn();
+    this.pumpOn.set(newValue);
+
+    const pumpRef = ref(this.database, 'pump');
+    set(pumpRef, newValue)
+      .then(() => console.log('Pump state updated to', newValue))
+      .catch(err => console.error('Error updating pump state', err));
+  }
 }
