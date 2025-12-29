@@ -161,7 +161,7 @@ void loop(void) {
     bool firebasePumpState = readPumpStatusFromFirebase();
     if (firebasePumpState != pumpState) {
       pumpState = firebasePumpState;
-      digitalWrite(PUMP_PIN, pumpState ? LOW : HIGH);
+      digitalWrite(PUMP_PIN, pumpState ? HIGH : LOW);
       Serial.print("Pumpa promijenila stanje: ");
       Serial.println(pumpState ? "ON" : "OFF");
     }

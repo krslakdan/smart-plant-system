@@ -79,7 +79,7 @@ export class SensorService {
     });
 
     onValue(ref(db, 'pump'), (snapshot) => {
-      this.pumpOn.set(!!snapshot.val());
+      this.pumpOn.set(snapshot.val());
       this.dataReceived();
     });
   }
