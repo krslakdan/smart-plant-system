@@ -12,6 +12,7 @@
 #define LIGHT_DIGITAL_PIN 27
 #define LIGHT_ANALOG_PIN 32
 #define READ_INTERVAL_MS 1000
+#define PUMP_PIN 26
 
 const char* ssid = WLAN_SSID;
 const char* password = WLAN_PASSWORD;
@@ -85,6 +86,8 @@ void setup(void) {
   pinMode(DIGITAL_PIN, INPUT);
   pinMode(AIR_QUALITY_PIN, INPUT);
   pinMode(LIGHT_DIGITAL_PIN, INPUT);
+  pinMode(PUMP_PIN, OUTPUT);
+  digitalWrite(PUMP_PIN, HIGH);
   analogReadResolution(12);
   analogSetAttenuation(ADC_11db);
 
