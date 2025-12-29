@@ -16,7 +16,7 @@
 
 bool pumpState = false;
 unsigned long lastPumpCheck = 0;
-const unsigned long PUMP_CHECK_INTERVAL = 2000;
+const unsigned long PUMP_CHECK_INTERVAL = 200;
 
 
 unsigned long lastSensorRead = 0;
@@ -24,7 +24,7 @@ unsigned long lastTempRequest = 0;
 bool tempRequested = false;
 const unsigned long SENSOR_READ_INTERVAL = 5000;
 const unsigned long TEMP_CONVERSION_TIME = 750;
-const unsigned long LED_CHECK_INTERVAL = 500; 
+const unsigned long LED_CHECK_INTERVAL = 200;
 unsigned long lastLedCheck = 0;
 
 
